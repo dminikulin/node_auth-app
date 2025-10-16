@@ -23,7 +23,7 @@ function findByEmail(email) {
   });
 }
 
-async function register({ email, password }) {
+async function register({ name, email, password }) {
   const activationToken = uuidv4();
 
   const existsUser = await User.findByEmail({ email });
@@ -34,7 +34,12 @@ async function register({ email, password }) {
     });
   }
 
-  await User.create({ email, password, activationToken });
+  await User.create({
+    name,
+    email,
+    password,
+    activationToken,
+  });
 
   await emailService.sendActivationEmail(email, activationToken);
 }

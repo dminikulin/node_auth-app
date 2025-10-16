@@ -27,6 +27,8 @@ app.use(
   }),
 );
 
+app.use(notFoundMiddleware);
+
 app.use(authRouter);
 app.use('/users', userRouter);
 
@@ -35,7 +37,6 @@ app.get('/', (req, res) => {
 });
 
 app.use(errorMiddleware);
-app.use(notFoundMiddleware);
 
 app.listen(PORT, () => {
   console.log('Server is runnning');

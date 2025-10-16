@@ -17,7 +17,7 @@ export const User = client.define('user', {
   },
   activationToken: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   resetPasswordToken: {
     type: DataTypes.STRING,

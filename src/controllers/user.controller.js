@@ -44,15 +44,20 @@ const changePassword = async (req, res) => {
   const userId = req.user.id;
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
-  if (!newPassword === confirmPassword) {
+  if (newPassword !== confirmPassword) {
     throw ApiError.badRequest('Passwords do not match');
   }
 
-  if (newPassword.length < 6) {
+  if (newPassword && newPassword.length < 6) {
     throw ApiError.badRequest('Password must be at least 6 characters');
   }
 
   const user = await User.findByPk(userId);
+
+  if (!user) {
+    throw ApiError.notFound();
+  }
+
   const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
   if (!isOldPasswordValid) {

@@ -125,7 +125,7 @@ const logout = async (req, res) => {
 
 const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
-  const user = await User.findByEmail(email);
+  const user = await userService.findByEmail(email);
 
   if (!user) {
     return res.send({
@@ -137,7 +137,7 @@ const requestPasswordReset = async (req, res) => {
   const resetToken = uuidv4();
 
   user.resetPasswordToken = resetToken;
-  user.resetPasswordExpires = Date.now() + 3600000; // 1 hour expiration
+  user.resetPasswordExpires = new Date(Date.now() + 3600000);
   await user.save();
 
   await emailService.sendPasswordResetEmail(email, resetToken);
@@ -178,7 +178,7 @@ const resetPassword = async (req, res) => {
   const user = await User.findOne({
     where: {
       resetPasswordToken: token,
-      resetPasswordExpires: { [Op.gt]: Date.now() },
+      resetPasswordExpires: { [Op.gt]: new Date() },
     },
   });
 
